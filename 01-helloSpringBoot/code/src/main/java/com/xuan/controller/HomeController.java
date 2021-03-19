@@ -44,7 +44,6 @@ public class HomeController {
 
         List<YellowResources> h = new ArrayList<>();
         files.forEach((file -> {
-//            System.out.println(file.getName());
             YellowResources temp = new YellowResources();
             temp.setName(file.getName());
             temp.setUrl(file.getPath().replaceAll("\\\\","/"));
@@ -53,7 +52,6 @@ public class HomeController {
 
         JSONArray jsonArray = (JSONArray) JSONArray.toJSON(h);
         String listJson = jsonArray.toString();
-//        System.out.println(listJson);
         return listJson;
     }
 

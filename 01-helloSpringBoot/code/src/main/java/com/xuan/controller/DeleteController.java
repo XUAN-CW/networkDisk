@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-
+@CrossOrigin
 @RestController
 public class DeleteController {
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+    <script src="js/vue-2.6.10.js"></script>
+    <script src="js/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+    <h1><a href="preview.html">preview</a></h1>
+    <ul>
+        <li v-for="(resource, index) in resource" :key="index">
+            <a :href="resource.url">{{resource.name}}</a>
+            {{resource.size}}
+            <button @click="deleteFile(resource.url)">删除</button>
+            <button @click="preview(resource.url)">预览</button>
+        </li>
+    </ul>
+
+</div>
+<script type="text/javascript">
+    var app = new Vue({
+        el:"#app",
+        data:{
+            resource:[],
+            remainingMemory:0
+        },
+
+        created(){
+            axios.get("http://127.0.0.1:9812/getdir").then(res=>{
+                console.log(res);
+                //将数据赋值到vue实例中的数据属性resource
+                //不能使用this，在axios回调函数中表示窗口，不是vue实例
+                app.resource = res.data;
+            }).catch(err=>alert(err));
+        },
+
+        methods:{
+            deleteFile:function(url) {
+                var r=confirm("您确定要删除"+url)
+                if (r===true) {
+                    axios({
+                        url:"http://127.0.0.1:9812/delete",
+                        method:"delete",
+                        path:url,
+                        data: {
+                            path: url
+                        }
+                    }).then(res=>{ // res 表示返回的数据,具体请看控制台
+                        console.log(res);
+                    }).catch(err=>alert(err));
+                }
+            },
+            preview:function (url) {
+                axios({
+                    url:"http://127.0.0.1:9812/getPreviewImages",
+                    method:"post",
+                    data: {
+                        movie: url
+                    }
+                }).then(res=>{ // res 表示返回的数据,具体请看控制台
+                    console.log(res);
+                }).catch(err=>alert(err));
+            }
+        }
+    });
+</script>
+</body>
+</html>

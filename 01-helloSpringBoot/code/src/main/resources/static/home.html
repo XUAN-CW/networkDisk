@@ -37,8 +37,11 @@
                 var r=confirm("您确定要删除"+url)
                 if (r===true) {
                     axios({
-                        url:"/delete/"+url,
-                        method:"delete"
+                        url:"/delete",
+                        method:"delete",
+                        data: {
+                            path: url
+                        }
                     }).then(res=>{ // res 表示返回的数据,具体请看控制台
                         console.log(res);
                     }).catch(err=>alert(err));

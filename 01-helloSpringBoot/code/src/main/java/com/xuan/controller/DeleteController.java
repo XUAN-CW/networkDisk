@@ -1,5 +1,6 @@
 package com.xuan.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,14 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
-@Controller
+@RestController
 public class DeleteController {
 
-//     http://localhost:9812/hello
-    @DeleteMapping("/delete/**")
-    public void deleteFileByRequestURI(HttpServletRequest request){
-        System.out.println(request.getRequestURI());
-        File file=new File(request.getRequestURI().substring("delete".length()+2));
+    @DeleteMapping("/delete")
+    public void deleteFileByRequestURI(@RequestBody String body){
+
+        JSONObject jsonObject = (JSONObject) JSONObject.parse(body);
+        File file = new File((String) jsonObject.get("path"));
         System.out.println(file);
         file.delete();
     }

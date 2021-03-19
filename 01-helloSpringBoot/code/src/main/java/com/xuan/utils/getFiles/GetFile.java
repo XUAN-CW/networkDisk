@@ -45,8 +45,8 @@ public class GetFile {
                 if (file.isDirectory()) {
                     if (selectMode.selected(file)) {
                         folder.push(file);// 符合条件的文件夹入栈
+                        recursiveTraversalFolder(selectMode, file);// 是文件夹，继续往下递归
                     }
-                    recursiveTraversalFolder(selectMode, file);// 是文件夹，继续往下递归
                 } else {
                     if (selectMode.selected(file)) {
                         files.push(file);// 符合条件的文件入栈

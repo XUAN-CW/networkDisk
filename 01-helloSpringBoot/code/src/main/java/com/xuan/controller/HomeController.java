@@ -30,9 +30,11 @@ public class HomeController {
         GetFile getFile = new GetFile(new File("."));
         Stack<File> files = getFile.getFiles((file)->{
             List<String> unwanted = new ArrayList<>();//不想要的文件的正则表达式
-            unwanted.add("!qB$");
+            unwanted.add(".+!qB$");
             unwanted.add("^\\..+");
             for (String regex:unwanted) {
+                if (file.getName().startsWith(".")){
+                }
                 if (file.getName().replaceAll(regex,"").equals("")){
                     return false;
                 }

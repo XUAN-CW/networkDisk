@@ -8,6 +8,7 @@
 </head>
 <body>
 <div id="app">
+
     <ul>
         <li v-for="(resource, index) in resource" :key="index">
             {{resource.name}}<button @click="deleteFile(resource.url)">删除</button>
@@ -23,7 +24,7 @@
         },
 
         created(){
-            axios.get("15-data.json").then(res=>{
+            axios.get("getdir").then(res=>{
                 console.log(res);
                 //将数据赋值到vue实例中的数据属性resource
                 //不能使用this，在axios回调函数中表示窗口，不是vue实例

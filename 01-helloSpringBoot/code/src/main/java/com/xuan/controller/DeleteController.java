@@ -12,11 +12,11 @@ public class DeleteController {
 
 //     http://localhost:9812/hello
     @DeleteMapping("/delete/**")
-    public String deleteFileByRequestURI(HttpServletRequest request){
+    public void deleteFileByRequestURI(HttpServletRequest request){
+        System.out.println(request.getRequestURI());
         File file=new File(request.getRequestURI().substring("delete".length()+2));
         System.out.println(file);
         file.delete();
-        return "redirect:"+request.getRequestURI();
     }
 
 }

@@ -1,4 +1,4 @@
-bypyCompareInfo=bypyCompareInfo${RANDOM}.txt
+bypyCompareInfo=bypyCompareInfo$(date +%s)${RANDOM}.txt
 
 bypy compare > ${bypyCompareInfo}
 

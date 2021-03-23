@@ -1,4 +1,4 @@
-for ((i=1; i<=14400; i++))
+for ((i=1; i<=14400; ))
 do
     # 找到一个符合要求的文件
     shouldBeUploaded=$(find . -type f -size +90M | grep -v '!qB$' | sed -n 1p)
@@ -15,11 +15,11 @@ do
     zipTmp=${dir}/zipTmp$(date +%s)${RANDOM}.zip
     zipFile=${dir}/zipFile$(date +%s)${RANDOM}.zip
     #加密压缩
-    zip -P Xuan19981224 "${zipTmp}" "${shouldBeUploaded}"
+    zip -P Xuan19981224 "${zipTmp}" "${shouldBeUploaded}" -m
     #分卷
     zip -s 18m "${zipTmp}" --out "${zipFile}"
-    #删除源文件与临时文件
-    rm -rf "${shouldBeUploaded}" "${zipTmp}"
+    #删除临时文件
+    rm -rf "${zipTmp}"
     ############################################################################################
     #上传 zip 文件
     bypy -v --include-regex ".+\.z(\d+|ip)" syncup
@@ -47,5 +47,6 @@ do
     rm -rf ${bypyCompareInfo}
 
     echo "${i}th file ${shouldBeUploaded} is complete! sleep 60s"
+    i++
     sleep 60
 done

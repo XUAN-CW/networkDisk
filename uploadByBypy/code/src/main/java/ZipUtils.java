@@ -19,17 +19,21 @@ public class ZipUtils {
      * 传入文件,分卷压缩到同名目录下,每卷10M,成功则删除源文件
      * @param file
      */
-    public static File CreateSplitZipFile_10M(File file) throws ZipException {
+    public static File CreateSplitZipFile(File file) throws Exception {
+
+        if (file.length()<65536*10){
+            throw new Exception("文件太小,至少160KiB");
+        }
 
         //创建去掉后缀的同名目录
         File dir = new File(file.getParent() + File.separator +
-                file.getName().replaceAll("\\..+$", ""));
+                file.getName().replaceAll("\\..+$",""));
 
         // Initiate ZipFile object with the path/name of the zip file.
         ZipFile zipFile = zipFile = new ZipFile(dir.getAbsolutePath() + File.separator +
-                file.getName().replaceAll("\\..+$", "") + ".zip");
-        dir.mkdir();
+                file.getName() + ".zip");
 
+        System.out.println(dir.mkdir()+":"+file.getAbsolutePath());
         // Build the list of files to be added in the array list
         // Objects of type File have to be added to the ArrayList
         ArrayList filesToAdd = new ArrayList();
@@ -50,7 +54,13 @@ public class ZipUtils {
         // 65536 bytes
         // Please note: If the zip file already exists, then this method throws an
         // exception
-        zipFile.createZipFile(filesToAdd, parameters, true, 1024 * 1024 * 10);
+        long splitLength;
+        if (file.length()<1024*1024*100){
+            splitLength=file.length()/10;
+        }else {
+            splitLength = 1024*1024*10;
+        }
+        zipFile.createZipFile(filesToAdd, parameters, true, splitLength);
         file.delete();
         return dir;
     }

@@ -13,13 +13,14 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         try {
-
             String c = SaveAndRead.read("compare.txt");
             c=c.replaceAll("(.+Same files.+\n)|(\n.+Different files([\\s\\S]*)+)","");
             String[] sameFiles = c.split("\n");
             for (int i = 0; i < sameFiles.length; i++) {
                 File file = new File(sameFiles[i].replaceAll("^\\w - ",""));
-                file.delete();
+                if (file.getName().replaceAll(".+\\.z(\\d+|ip)","").equals("")){
+                    file.delete();
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

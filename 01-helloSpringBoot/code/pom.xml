@@ -14,6 +14,10 @@
         <version>2.1.5.RELEASE</version>
     </parent>
 
+    <properties>
+        <!--        <javacpp.platform.dependencies>windows-x86_64</javacpp.platform.dependencies>-->
+        <javacpp.platform.dependencies>linux-x86_64</javacpp.platform.dependencies>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -43,23 +47,45 @@
             <scope>test</scope>
         </dependency>
 
-
-
-
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacv</artifactId>
-            <version>1.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>ffmpeg-platform</artifactId>
-            <version>4.3.1-1.5.4</version>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv</artifactId>
+            <version>1.4.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bytedeco.javacpp-presets</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>opencv</artifactId>
+            <version>3.4.1-1.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>opencv</artifactId>
+            <version>3.4.1-1.4.1</version>
+            <classifier>${javacpp.platform.dependencies}</classifier>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bytedeco.javacpp-presets/ffmpeg -->
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>3.4.2-1.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>3.4.2-1.4.1</version>
+            <classifier>${javacpp.platform.dependencies}</classifier>
         </dependency>
     </dependencies>
 

@@ -1,7 +1,7 @@
 
     # 找到一个符合要求的文件
     shouldBeUploaded=$(find . -type f -size +3M | grep -v '!qB$' | sed -n 1p)
-    echo currentFile${shouldBeUploaded}
+    echo currentFile-${shouldBeUploaded}
     empty=""
     if [[ ${empty} = ${shouldBeUploaded} ]] ; then
         echo "empty! sleep 60s"
@@ -10,7 +10,6 @@
     fi
     # 获取文件所在路径
     dir=$(dirname "${shouldBeUploaded}")
-    echo dir${dir}
     # 设置压缩文件
     zipTmp=${dir}/zipTmp$(date +%s)${RANDOM}.zip
     zipFile=${dir}/zipFile$(date +%s)${RANDOM}.zip
@@ -27,21 +26,20 @@
     
     bypyCompareInfo=bypyCompareInfo$(date +%s)${RANDOM}.txt
     dir=$(echo ${dir} | sed 's/\.\(.*\)/\1/g'|sed 's/\/\(.*\)/\1/g')
-    echo rm${dir}
     
     bypy compare ${dir} ${dir} > ${bypyCompareInfo}
     
     cat ${bypyCompareInfo}
     
     sameFilesAt=`cat ${bypyCompareInfo} | grep -n 'Same files' | cut -d ':' -f 1`
-    echo ${sameFilesAt}
+#    echo ${sameFilesAt}
     differentFilesAt=`cat ${bypyCompareInfo} | grep -n 'Different files' | cut -d ':' -f 1`
-    echo ${differentFilesAt}
+#    echo ${differentFilesAt}
     
     sameFilePathArray=($(cat ${bypyCompareInfo} | sed -n "${sameFilesAt},${differentFilesAt}p" | grep '^F' | awk '{print $3}'))
     for element in $(seq 0 $((${#sameFilePathArray[*]}-1)))
     do
-    echo ${sameFilePathArray[$element]}
+#    echo ${sameFilePathArray[$element]}
         rm -rf ${dir}/${sameFilePathArray[$element]}
     done
     

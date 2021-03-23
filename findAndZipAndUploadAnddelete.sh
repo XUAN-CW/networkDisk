@@ -1,5 +1,7 @@
 for ((i=1; i<=14400; ))
 do
+    #删一下空文件夹
+    find -type d -empty | xargs rm -rf
     # 找到一个符合要求的文件
     shouldBeUploaded=$(find . -type f -size +90M | grep -v '!qB$' | sed -n 1p)
     echo "currentFile: ${shouldBeUploaded}"

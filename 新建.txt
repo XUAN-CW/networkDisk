@@ -1,4 +1,4 @@
 find . -type f -size +90M -size -20G 2>/dev/null| xargs du --exclude="." -k 2>/dev/null| grep -v '!qB$'| sort -n | sed -n 1p | awk '{print $2}'
 
-#本目录下小于20G 的文件全部送到 aaa
-find . -type f -size -20G 2>/dev/null | xargs -i mv {} aaa/
+#把下载好的移动到 h2 目录
+find . -type f -size +90M -size -20G 2>/dev/null| xargs du --exclude="." -k 2>/dev/null| grep -v '!qB$'| sort -n | sed -n 1p | awk '{print $2}' | xargs -i mv {} /h2/

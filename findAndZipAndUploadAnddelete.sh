@@ -1,7 +1,7 @@
 for ((i=1; i<=14400; ))
 do
     # 找到一个符合要求的文件
-    shouldBeUploaded=$(find . -type f -size +90M | grep -v '!qB$' | sed -n 1p)
+    shouldBeUploaded=$(find . -type f -size +90M -size -20G 2>/dev/null| xargs du --exclude="." -k 2>/dev/null| grep -v '!qB$'| sort -n | sed -n 1p | awk '{print $2}')
     echo "currentFile: ${shouldBeUploaded}"
     empty=""
     if [[ ${empty} = ${shouldBeUploaded} ]] ; then

@@ -21,8 +21,9 @@ do
     #删除临时文件
     rm -rf "${zipTmp}"
     ############################################################################################
-    #上传 zip 文件
-    bypy -v --include-regex ".+\.z(\d+|ip)" syncup
+    #上传 zip 文件，.zip 最后上传 
+    bypy -v --include-regex ".+\.z\d+" syncup
+    bypy -v --include-regex ".+\.zip" syncup
     ############################################################################################
     
     bypyCompareInfo=bypyCompareInfo$(date +%s)${RANDOM}.txt

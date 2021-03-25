@@ -1,2 +1,2 @@
-nohup ./findAndZipAndUpload.sh > FindAndZipAndUpload.log 2>&1 &
-nohup ./deleteSomething.sh > DeleteSomething.log 2>&1 &
+nohup ./findAndZipAndUpload.sh > FindAndZipAndUpload.out 2>&1 &
+nohup ./deleteSomething.sh > DeleteSomething.out 2>&1 &

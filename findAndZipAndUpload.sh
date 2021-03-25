@@ -13,7 +13,7 @@ do
     # 获取文件所在路径
     # 设置压缩文件
     zipTmp="${shouldBeUploaded%.*}-$(date +%s).zip"
-    zipFile="${shouldBeUploaded%.*}.zip"
+    zipFile="${shouldBeUploaded%.*}-zipFile.zip"
     #加密压缩
     zip -P Xuan19981224 "${zipTmp}" "${shouldBeUploaded}" -m
     #分卷
@@ -23,7 +23,7 @@ do
     #上传 zip 文件，.zip 最后上传 
     bypy -v --include-regex ".+\.z\d+" syncup
     bypy -v --include-regex ".+\.zip" syncup
-    echo "$complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
+    echo "complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
     ((i++))
     sleep 60
 done

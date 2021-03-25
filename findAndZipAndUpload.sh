@@ -1,7 +1,7 @@
 for ((i=1; i<=14400; ))
 do
     # 找到一个符合要求的文件
-    shouldBeUploaded=$(find . -type f -size +1M -size -20G 2>/dev/null|sed 's/\(.*\)/\"\1\"/'| xargs du --exclude="." -k 2>/dev/null| grep -v '!qB$'| sort -n | sed -n 1p | awk 'sub($1,"")'|awk '$1=$1'
+    shouldBeUploaded=$(find . -type f -size +90M -size -20G 2>/dev/null|sed 's/\(.*\)/\"\1\"/'| xargs du --exclude="." -k 2>/dev/null| grep -v '!qB$'| sort -n | sed -n 1p | awk 'sub($1,"")'|awk '$1=$1'
 )
     echo "currentFile: ${shouldBeUploaded}"
     empty=""
@@ -12,12 +12,12 @@ do
     fi
     # 获取文件所在路径
     # 设置压缩文件
-    zipTmp="${shouldBeUploaded%.*}$(date +%s).zip"
+    zipTmp="${shouldBeUploaded%.*}-$(date +%s).zip"
     zipFile="${shouldBeUploaded%.*}.zip"
     #加密压缩
     zip -P Xuan19981224 "${zipTmp}" "${shouldBeUploaded}" -m
     #分卷
-    zip -s 1m "${zipTmp}" --out "${zipFile}"
+    zip -s 18m "${zipTmp}" --out "${zipFile}"
     #删除临时文件
     rm -rf "${zipTmp}"
     #上传 zip 文件，.zip 最后上传 

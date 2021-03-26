@@ -10,18 +10,7 @@ do
         sleep 60
         continue
     fi
-    
-    availableSpace=$(df --block-size=M | grep /dev/vda1 |awk '{print  $4}'|sed 's/\(.*\)\(.\)/\1/g')
-    shouldBeUploadedFileSize=$(ls -l --block-size=M ${shouldBeUploaded} |awk '{print $5}'|sed 's/\(.*\)\(.\)/\1/g')
-    if (( ${availableSpace} < ${shouldBeUploadedFileSize}+1024 ))
-    then
-        echo "availableSpace-${availableSpace}"
-        echo "shouldBeUploadedFileSize-${shouldBeUploadedFileSize}"
-        echo "insufficient disk space! sleep 60s"
-        sleep 60
-        continue
-    fi
-    
+    # 获取文件所在路径
     # 设置压缩文件
     zipTmp="${shouldBeUploaded%.*}-$(date +%s).zip"
     zipFile="${shouldBeUploaded%.*}-zipFile.zip"
@@ -34,7 +23,7 @@ do
     #上传 zip 文件，.zip 最后上传 
     bypy -v --include-regex ".+\.z\d+" syncup
     bypy -v --include-regex ".+\.zip" syncup
-    echo "complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
+    echo "$complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
     ((i++))
     sleep 60
 done

@@ -6,7 +6,8 @@ do
     #清空日志
 #    >FindAndZipAndUpload.out
     #删除空文件夹
-    find -type d -empty | xargs rm -rf
+    find -type d -empty | sed 's/\(.*\)/\"\1\"/' # 这一句提示一下删除了什么
+    find -type d -empty | sed 's/\(.*\)/\"\1\"/' | xargs rmdir
     #每分钟清理一次
     echo "sleeping"
     sleep 60

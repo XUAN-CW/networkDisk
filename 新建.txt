@@ -9,3 +9,9 @@ kill -CONT $(ps -ef |grep qbittorrent-nox | grep -v color |awk '{print $2}')
 
 
 dd if=/dev/zero of=file bs=1M count=100
+
+
+cat FindAndZipAndUpload.out | grep -a zipFile | cut -d \' -f 2 |sed 's/\(.*\)/\"\1\"/'|  xargs rm -rf
+
+
+cat FindAndZipAndUpload.out | grep -a zipFile | cut -d = -f 1 |  xargs rm -rf

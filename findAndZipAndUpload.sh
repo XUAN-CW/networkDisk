@@ -1,5 +1,14 @@
+runningFlag="runningFlag_$(date +%s)"
+echo "删除此文件,程序安全停止 ">${runningFlag}
+
 for ((i=1; i<=14400; ))
 do
+    if [ -f ${runningFlag} ];then
+        echo "文件存在,程序继续运行"
+    else
+        echo "文件不存在,程序安全停止"
+        break
+    fi
     ########## 文件搜索解释 ########################################
     # - 在 qbit 目录下找小于 40G 的文件
     # - 单引号双引号转义

@@ -49,7 +49,7 @@ do
     if [ ${shouldBeUploadedFileSize} -gt 1024 ]
     then
         echo "分卷"
-        zip -s 1m "${zipTmp}" --out "${bigFile}"
+        zip -s 18m "${zipTmp}" --out "${bigFile}"
         echo "删除临时文件"
         rm -rf "${zipTmp}"
     fi

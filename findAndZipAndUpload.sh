@@ -1,6 +1,8 @@
 runningFlag="runningFlag_$(date +%s)"
 echo "删除此文件,程序安全停止 ">${runningFlag}
 
+zipFileFlag="zipFileFlag_$(date +%s)"
+
 for ((i=1; i<=14400; ))
 do
     if [ -f ${runningFlag} ];then
@@ -16,8 +18,8 @@ do
     # - 从小大排序
     # - 不要未下载完成的 .!qB 文件
     # - 取最上面的一行路径(经上面排序，取到的是最小的文件)
-    shouldBeUploaded=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -m 2>/dev/null| sort -n |sed -n 1p|sed 's/^[0-9]*\x09//g')
-    shouldBeUploadedFileSize=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -m 2>/dev/null| sort -n |sed -n 1p|awk '{print $1}')
+    shouldBeUploaded=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|grep -v ${zipFileFlag}|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -m 2>/dev/null| sort -n |sed -n 1p|sed 's/^[0-9]*\x09//g')
+    shouldBeUploadedFileSize=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|grep -v ${zipFileFlag}|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -m 2>/dev/null| sort -n |sed -n 1p|awk '{print $1}')
     empty=""
     if [[ ${empty} = ${shouldBeUploaded} ]] ; then
         echo "empty! sleep 60s"
@@ -48,7 +50,6 @@ do
     mv "${shouldBeUploaded}" "${dir}/"
     ###############################################################
     echo "设置压缩文件"
-    zipFileFlag="zipFileFlag"
     zipTmp="${dir}/smallFile_${zipFileFlag}_$(date +%s).zip"
     bigFile="${dir}/bigFile_${zipFileFlag}_$(date +%s).zip"
     echo "加密压缩"
@@ -60,14 +61,20 @@ do
         echo "删除临时文件"
         rm -rf "${zipTmp}"
     fi
+    ###############################################################
     echo "bypy 上传到百度云"
-    python3 -m bypy -v syncup "${dir}" "${dir}" | grep -a "${zipFileFlag}" |grep -a "==>" |grep -a OK |  cut -d = -f 1 |tee zipFileDeleted.txt| xargs rm
+    zipFileArray=($(ls ${dir}))
+    for element in $(seq 0 $((${#zipFileArray[*]}-1)))
+    do
+        echo "上传中： ${dir}/${zipFileArray[$element]}"
+        python3 -m bypy -v upload "${dir}/${zipFileArray[$element]}" "${dir}/" | grep -a "${zipFileFlag}" |grep -a "==>" |grep -a OK |  cut -d = -f 1| xargs rm
+    done
+    ###############################################################
     echo "删除空文件夹"
-    find -type d -empty | sed 's/\(.*\)/\"\1\"/' | tee deleteEmptyFolder.txt | xargs rmdir
+    find -type d -empty | sed 's/\(.*\)/\"\1\"/' | xargs rmdir
 #    break
-    echo "complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
+    echo "complete! ${i}th file ${shouldBeUploaded} is uploaded!"
     ((i++))
-    sleep 60
 done
 
 

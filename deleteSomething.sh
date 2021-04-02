@@ -2,7 +2,8 @@ for ((i=1; i<=14400; ))
 do
     echo $(date)
     #根据日志删除已经上传的文件
-    tail -n 3000 FindAndZipAndUpload.out | grep -a zipFile |grep -a "==>" |grep -a OK |  cut -d = -f 1 | xargs rm -rf
+    tail -n 1000 FindAndZipAndUpload.out | grep -a zipFile |grep -a "==>" |grep -a OK |  cut -d = -f 1 | sed 's/.\(.*\)../\1/'|sed 's/\([\x20\x22\x23]\)/\\\1/g' | xargs rm
+#    tail -n 100 FindAndZipAndUpload.out | grep -a zipFile |grep -a "==>" |grep -a OK |  cut -d = -f 1 | sed 's/.\(.*\)../\1/'
     #清空日志
 #    >FindAndZipAndUpload.out
     #删除空文件夹

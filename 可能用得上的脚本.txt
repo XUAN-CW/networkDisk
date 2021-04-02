@@ -8,10 +8,33 @@ kill -STOP $(ps -ef |grep qbittorrent-nox | grep -v color |awk '{print $2}')
 kill -CONT $(ps -ef |grep qbittorrent-nox | grep -v color |awk '{print $2}')
 
 
-dd if=/dev/zero of=file bs=1M count=100
+dd if=/dev/zero of=file.mp4 bs=1M count=10
 
 
 cat FindAndZipAndUpload.out | grep -a zipFile | cut -d \' -f 2 |sed 's/\(.*\)/\"\1\"/'|  xargs rm -rf
 
 
 cat FindAndZipAndUpload.out | grep -a zipFile | cut -d = -f 1 |  xargs rm -rf
+
+# 转义单引号和双引号
+echo "this is' test\" string" | sed $'s/\([\' \"]\)/\1\\\\\'/g'
+
+# 转义需要转义的字符，有些字符不需要，但转义了也能识别
+find | sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'
+
+find qbit -type f -size -40G 2>/dev/null|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -k 2>/dev/null| sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g' | awk '{$1="";print $0}'
+
+
+find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -k 2>/dev/null| sort -n |sed -n 1p|sed 's/^[0-9]*//g'
+
+
+tail -n 100 FindAndZipAndUpload.out | grep -a zipFile |grep -a "==>" |grep -a OK |  cut -d = -f 1 | sed 's/.\(.*\)../\1/'|sed 's/\([\x20-\x2A\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'
+
+
+tail -n 100 FindAndZipAndUpload.out | grep -a zipFile |grep -a "==>" |grep -a OK |  cut -d = -f 1 | sed 's/.\(.*\)../\1/'|sed 's/\([\x20\x22\x23/x17\x28\x29\x2A\x5B\x5D\x5E\x60\x7B\x7C\x7D]\)/\\\1/g'
+
+tail -n 100 FindAndZipAndUpload.out | grep -a zipFile |grep -a "==>" |grep -a OK |  cut -d = -f 1 | sed 's/.\(.*\)../\1/'|sed 's/\([\x20\x22\x23/x17\x28\x29\x2A\x5B\x5D]\)/\\\1/g'
+
+
+
+bypy -v upload oceans15.mp4  |grep -a "==>" |grep -a OK |  cut -d = -f 1| xargs rm

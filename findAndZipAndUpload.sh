@@ -67,7 +67,7 @@ do
     echo "删除空文件夹"
     find -type d -empty | sed 's/\(.*\)/\"\1\"/' | tee deleteEmptyFolder.txt | xargs rmdir
 #    break
-    echo "$complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
+    echo "complete! ${i}th file ${shouldBeUploaded} is uploaded! sleep 60s"
     ((i++))
     sleep 60
 done

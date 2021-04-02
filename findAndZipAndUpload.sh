@@ -18,8 +18,8 @@ do
     # - 取最上面的一行路径(经上面排序，取到的是最小的文件)
     # - 删除 awk 第一段,也就是文件大小
     # -
-    shouldBeUploaded=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -k 2>/dev/null| sort -n |sed -n 1p|sed 's/^[0-9]*\x09//g')
-    shouldBeUploadedFileSize=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -k 2>/dev/null| sort -n |sed -n 1p|awk '{print $1}')
+    shouldBeUploaded=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -m 2>/dev/null| sort -n |sed -n 1p|sed 's/^[0-9]*\x09//g')
+    shouldBeUploadedFileSize=$(find qbit -type f -size -40G 2>/dev/null|grep -v '!qB$'|grep -v parts|sed 's/\([\x20-\x2E\x3A-\x40\x5B-\x60\x7B-\x7E]\)/\\\1/g'|xargs du --exclude="." -m 2>/dev/null| sort -n |sed -n 1p|awk '{print $1}')
     empty=""
     if [[ ${empty} = ${shouldBeUploaded} ]] ; then
         echo "empty! sleep 60s"
@@ -27,8 +27,8 @@ do
         continue
     fi
     
-    allAvailableSpace=$(df --block-size=k | grep /dev/vda1 |awk '{print  $4}'|sed 's/\(.*\)\(.\)/\1/g')
-    reservedSpace=1024000
+    allAvailableSpace=$(df --block-size=m | grep /dev/vda1 |awk '{print  $4}'|sed 's/\(.*\)\(.\)/\1/g')
+    reservedSpace=1024
     zipAvailableSpace=$(expr ${allAvailableSpace} - ${shouldBeUploadedFileSize} - ${reservedSpace})
     echo "shouldBeUploaded=${shouldBeUploaded}"
     echo "shouldBeUploadedFileSize=${shouldBeUploadedFileSize}"
@@ -55,7 +55,7 @@ do
     bigFile="${dir}/bigFile_${zipFileFlag}_$(date +%s).zip"
     echo "加密压缩"
     zip -rP Xuan19981224 "${zipTmp}" "${dir}/" -m
-    if [ ${shouldBeUploadedFileSize} -gt 1024 ]
+    if [ ${shouldBeUploadedFileSize} -gt 18 ]
     then
         echo "分卷"
         zip -s 18m "${zipTmp}" --out "${bigFile}"

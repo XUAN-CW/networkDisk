@@ -28,7 +28,7 @@ do
     fi
     
     allAvailableSpace=$(df --block-size=m | grep /dev/vda1 |awk '{print  $4}'|sed 's/\(.*\)\(.\)/\1/g')
-    reservedSpace=1024
+    reservedSpace=512
     zipAvailableSpace=$(expr ${allAvailableSpace} - ${shouldBeUploadedFileSize} - ${reservedSpace})
     echo "shouldBeUploaded=${shouldBeUploaded}"
     echo "shouldBeUploadedFileSize=${shouldBeUploadedFileSize}"
@@ -63,7 +63,7 @@ do
     fi
     ###############################################################
     echo "bypy 上传到百度云"
-    zipFileArray=($(ls ${dir}))
+    zipFileArray=($(ls -S ${dir}))
     for element in $(seq 0 $((${#zipFileArray[*]}-1)))
     do
         echo "上传中： ${dir}/${zipFileArray[$element]}"

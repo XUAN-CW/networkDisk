@@ -66,7 +66,7 @@ do
     zipFileArray=($(ls -S ${dir}))
     for element in $(seq 0 $((${#zipFileArray[*]}-1)))
     do
-        echo "上传中： ${dir}/${zipFileArray[$element]}"
+        echo "$(date)开始上传 ${dir}/${zipFileArray[$element]}"
         python3 -m bypy -v upload "${dir}/${zipFileArray[$element]}" "${dir}/" | grep -a "${zipFileFlag}" |grep -a "==>" |grep -a OK |  cut -d = -f 1| xargs rm
     done
     ###############################################################

@@ -1,3 +1,8 @@
+# 查找除隐藏文件外得所有文件
+find -name "[^.]*" -print
+
+bypy -v --include-regex ".+\.z(\d+|ip)" syncup qbit/ qbit/ |grep -a "==>" |grep -a OK |  cut -d = -f 1| xargs rm
+
 find . -type f -size +90M -size -20G 2>/dev/null| xargs du --exclude="." -k 2>/dev/null| grep -v '!qB$'| sort -n | sed -n 1p | awk '{print $2}'
 
 #把下载好的移动到 h2 目录

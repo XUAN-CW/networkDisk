@@ -53,21 +53,31 @@ do
     zipTmp="${dir}/smallFile_${zipFileFlag}_$(date +%s).zip"
     bigFile="${dir}/bigFile_${zipFileFlag}_$(date +%s).zip"
     echo "加密压缩"
-    zip -rP Xuan19981224 "${zipTmp}" "${dir}/" -m
-    if [ ${shouldBeUploadedFileSize} -gt 18 ]
-    then
-        echo "分卷"
-        zip -s 18m "${zipTmp}" --out "${bigFile}"
-        echo "删除临时文件"
-        rm -rf "${zipTmp}"
-    fi
+    zip -rP Xuan19981224 "${dir}/" "${shouldBeUploaded}" -m
     ###############################################################
     echo "bypy 上传到百度云"
-    zipFileArray=($(ls -S ${dir}))
-    for element in $(seq 0 $((${#zipFileArray[*]}-1)))
+    bypy sync
+    isSameFile=false
+    #逐行读取
+    bypy compare "${dir}/" "${dir}/" | while read line
     do
-        echo "$(date)开始上传 ${dir}/${zipFileArray[$element]}"
-        python3 -m bypy -v upload "${dir}/${zipFileArray[$element]}" "${dir}/" | grep -a "${zipFileFlag}" |grep -a "==>" |grep -a OK |  cut -d = -f 1| xargs rm
+        # 找到相同文件开始的位置
+        if [ "$line" = "==== Same files ===" ];then
+            isSameFile=true
+            continue
+        fi
+        
+        # 找到相同文件结束的位置
+        if [ "$line" = "==== Different files ===" ];then
+            break
+        fi
+        
+        # 处于相同文件的地方
+        if [ "$isSameFile" = "true" ];then
+            deletedFile=$(echo ${line} | sed  's/^....//g')
+            echo "删除了 ""${deletedFile}"
+            rm -rf "${deletedFile}"
+        fi
     done
     ###############################################################
     echo "删除空文件夹"
